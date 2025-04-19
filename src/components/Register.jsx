@@ -120,7 +120,7 @@ const Register = () => {
                 >
                   <option value="customer">Customer</option>
                   <option value="supervisor">Supervisor</option>
-                  <option value="admin">Admin</option>
+                  {/* <option value="admin">Admin</option> */}
                 </select>
               </div>
 
