@@ -125,7 +125,16 @@ const Login = ({ setUser }) => {
             </div>
           </form>
 
-          <div className="text-center mt-6 animate-fadeIn">
+          <div className="text-center mt-6 animate-fadeIn space-y-2">
+            <p className="text-sm text-gray-600">
+              Need an account?{' '}
+              <button 
+                onClick={() => navigate('/register')}
+                className="text-green-600 hover:text-green-800 font-medium transition-colors duration-300 focus:outline-none"
+              >
+                Create one
+              </button>
+            </p>
             <p className="text-sm text-gray-600 hover:text-green-600 transition-colors duration-300">
               Need help? Contact support
             </p>
