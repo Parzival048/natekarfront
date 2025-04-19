@@ -13,7 +13,8 @@ import {
   FiCheckSquare,
   FiSearch,
   FiFilter,
-  FiDownload
+  FiDownload,
+  FiLogOut
 } from 'react-icons/fi';
 
 const AdminDashboard = () => {
@@ -38,6 +39,12 @@ const AdminDashboard = () => {
   });
   const [isExporting, setIsExporting] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(new Date());
+
+  // Logout: clear token & redirect to /login (replace history)
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login', { replace: true });
+  };
 
   const fetchComplaints = async () => {
     setIsLoading(true);
@@ -201,8 +208,24 @@ const AdminDashboard = () => {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
-          <div className="text-sm text-gray-500">
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+          
+          <div className="flex items-center space-x-4">
+            <div className="text-sm text-gray-500">
+              {new Date().toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </div>
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center px-3 py-1 text-sm bg-red-50 text-red-600 border border-red-100 rounded hover:bg-red-100 transition"
+            >
+              <FiLogOut className="mr-2" />
+              Logout
+            </button>
           </div>
         </div>
       </header>
