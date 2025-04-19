@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import { 
   FiCheckCircle, 
@@ -13,6 +14,7 @@ import {
 } from 'react-icons/fi';
 
 function SupervisorDashboard() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     cleaning: false,
     sweeping: false,
@@ -21,6 +23,12 @@ function SupervisorDashboard() {
   const [message, setMessage] = useState(null);
   const [user, setUser] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Logout handler
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login', { replace: true });
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -63,7 +71,7 @@ function SupervisorDashboard() {
     setIsSubmitting(true);
     try {
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Set time to start of day
+      today.setHours(0, 0, 0, 0);
       const attendanceData = {
         supervisorId: user._id,
         date: today.toISOString(),
@@ -72,16 +80,12 @@ function SupervisorDashboard() {
         mopping: formData.mopping
       };
 
-      const response = await api.post('/attendance/mark-attendance', attendanceData, {
+      await api.post('/attendance/mark-attendance', attendanceData, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       
       setMessage({ text: 'Attendance marked successfully!', type: 'success' });
-      setFormData({
-        cleaning: false,
-        sweeping: false,
-        mopping: false
-      });
+      setFormData({ cleaning: false, sweeping: false, mopping: false });
     } catch (error) {
       setMessage({
         text: error.response?.data?.message || 'Error marking attendance',
@@ -103,14 +107,25 @@ function SupervisorDashboard() {
               <h2 className="text-xl font-bold text-white flex items-center">
                 <FiCalendar className="mr-2" /> Daily Waste Collection Log
               </h2>
-              {user && (
-                <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-white font-medium">
-                    {user.name.charAt(0)}
-                  </div>
-                  <span className="ml-2 text-white text-sm font-medium">{user.name}</span>
-                </div>
-              )}
+              
+              <div className="flex items-center">
+                {user && (
+                  <>
+                    <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-white font-medium">
+                      {user.name.charAt(0)}
+                    </div>
+                    <span className="ml-2 text-white text-sm font-medium">{user.name}</span>
+                  </>
+                )}
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="ml-4 p-1 rounded-full hover:bg-green-500 hover:bg-opacity-20 transition"
+                  title="Logout"
+                >
+                  <FiLogOut className="h-5 w-5 text-white" />
+                </button>
+              </div>
             </div>
           </div>
           
